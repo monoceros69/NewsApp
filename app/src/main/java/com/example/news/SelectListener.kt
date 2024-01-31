@@ -1,7 +1,7 @@
-package com.example.news;
+package com.example.news
 
-import com.example.news.Models.NewsHeadlines;
+import com.example.news.models.NewsHeadlines
 
-public interface SelectListener {
-    void OnNewsClicked(NewsHeadlines headlines);
+interface SelectListener {
+    fun OnNewsClicked(headlines: NewsHeadlines?)
 }

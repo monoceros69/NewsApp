@@ -1,56 +1,41 @@
-package com.example.news;
+package com.example.news
 
-import android.annotation.SuppressLint;
-import android.content.Context;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.annotation.SuppressLint
+import android.content.Context
+import android.view.LayoutInflater
+import android.view.ViewGroup
+import androidx.recyclerview.widget.RecyclerView
+import com.example.news.models.NewsHeadlines
+import com.squareup.picasso.Picasso
 
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
-
-import com.example.news.Models.NewsHeadlines;
-import com.squareup.picasso.Picasso;
-
-import java.util.List;
-
-public class CustomAdapter extends RecyclerView.Adapter<CustomViewHolder> {
-
-    private Context context;
-    private List<NewsHeadlines> headlines;
-    private SelectListener listener;
-
-    public CustomAdapter(Context context, List<NewsHeadlines> headlines, SelectListener listener) {
-        this.context = context;
-        this.headlines = headlines;
-        this.listener = listener;
+class CustomAdapter(
+    private val context: Context,
+    private val headlines: List<NewsHeadlines>,
+    private val listener: SelectListener
+) : RecyclerView.Adapter<CustomViewHolder>() {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CustomViewHolder {
+        return CustomViewHolder(
+            LayoutInflater.from(context).inflate(R.layout.headline_list_items, parent, false)
+        )
     }
 
-    @NonNull
-    @Override
-    public CustomViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new CustomViewHolder(LayoutInflater.from(context).inflate(R.layout.headline_list_items, parent, false));
-    }
-
-    @Override
-    public void onBindViewHolder(@NonNull CustomViewHolder holder, @SuppressLint("RecyclerView") int position) {
-
-        holder.text_title.setText(headlines.get(position).getTitle());
-        holder.text_source.setText(headlines.get(position).getSource().getName());
-        if (headlines.get(position).getUrlToImage()!=null){
-            Picasso.get().load(headlines.get(position).getUrlToImage()).into(holder.img_headline);
+    override fun onBindViewHolder(
+        holder: CustomViewHolder,
+        @SuppressLint("RecyclerView") position: Int
+    ) {
+        holder.text_title.text = headlines[position].title
+        holder.text_source.text = headlines[position].source?.name.orEmpty()
+        if (headlines[position].urlToImage != null) {
+            Picasso.get().load(headlines[position].urlToImage).into(holder.img_headline)
         }
-
-        holder.cardView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                listener.OnNewsClicked(headlines.get(position));
-            }
-        });
+        holder.cardView.setOnClickListener {
+            listener.OnNewsClicked(
+                headlines[position]
+            )
+        }
     }
 
-    @Override
-    public int getItemCount() {
-        return headlines.size();
+    override fun getItemCount(): Int {
+        return headlines.size
     }
 }
